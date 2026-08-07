@@ -233,7 +233,7 @@ nav a:hover { opacity: 1; }
   display: grid;
   place-items: center;
   padding: 90px 24px;
-  background: linear-gradient(rgba(25,44,33,.78), rgba(25,44,33,.78)), url("../assets/images/05-memory.png") center/cover fixed;
+  background: linear-gradient(rgba(25,44,33,.78), rgba(25,44,33,.78)), url("../assets/images/05-memory.webp") center/cover fixed;
   color: white;
   text-align: center;
 }
