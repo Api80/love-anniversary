@@ -1,5 +1,5 @@
 const engagementDate = new Date(2026, 8, 28, 0, 0, 0);
-const firstMetDate = new Date(2026, 4, 1, 0, 0, 0);
+const relationshipStartDate = new Date(2026, 4, 1, 0, 0, 0);
 
 function pad(value) {
   return String(value).padStart(2, '0');
@@ -31,26 +31,26 @@ function updateCountdown() {
   fields.seconds.textContent = pad(seconds);
 }
 
-function updateKnownTime() {
-  const title = document.getElementById('known-title');
+function updateTogetherTime() {
+  const title = document.getElementById('together-title');
   const fields = {
-    days: document.getElementById('known-days'),
-    hours: document.getElementById('known-hours'),
-    minutes: document.getElementById('known-minutes'),
-    seconds: document.getElementById('known-seconds')
+    days: document.getElementById('together-days'),
+    hours: document.getElementById('together-hours'),
+    minutes: document.getElementById('together-minutes'),
+    seconds: document.getElementById('together-seconds')
   };
 
   if (!title || Object.values(fields).some(field => !field)) return;
 
   const now = new Date();
-  const hasMet = now >= firstMetDate;
-  const distance = Math.abs(now - firstMetDate);
+  const relationshipStarted = now >= relationshipStartDate;
+  const distance = Math.abs(now - relationshipStartDate);
   const days = Math.floor(distance / 86400000);
   const hours = Math.floor(distance / 3600000) % 24;
   const minutes = Math.floor(distance / 60000) % 60;
   const seconds = Math.floor(distance / 1000) % 60;
 
-  title.textContent = hasMet ? '我们已经认识' : '距离我们认识还有';
+  title.textContent = relationshipStarted ? '我们已经在一起' : '距离我们在一起还有';
   fields.days.textContent = pad(days);
   fields.hours.textContent = pad(hours);
   fields.minutes.textContent = pad(minutes);
@@ -59,7 +59,7 @@ function updateKnownTime() {
 
 function updateTimers() {
   updateCountdown();
-  updateKnownTime();
+  updateTogetherTime();
 }
 
 updateTimers();
