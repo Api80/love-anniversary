@@ -99,3 +99,85 @@ function createPetal() {
 }
 
 if (!reduceMotion) setInterval(createPetal, 2600);
+
+const musicButton = document.getElementById('music-toggle');
+let audioContext;
+let masterGain;
+let musicTimer;
+let noteIndex = 0;
+
+const melody = [
+  261.63, 329.63, 392.00, 493.88,
+  440.00, 392.00, 329.63, 293.66,
+  261.63, 329.63, 440.00, 392.00,
+  293.66, 329.63, 261.63, 196.00
+];
+
+function playNote(frequency) {
+  if (!audioContext || !masterGain) return;
+
+  const now = audioContext.currentTime;
+  const oscillator = audioContext.createOscillator();
+  const noteGain = audioContext.createGain();
+
+  oscillator.type = 'sine';
+  oscillator.frequency.setValueAtTime(frequency, now);
+  noteGain.gain.setValueAtTime(0, now);
+  noteGain.gain.linearRampToValueAtTime(0.18, now + 0.08);
+  noteGain.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
+
+  oscillator.connect(noteGain);
+  noteGain.connect(masterGain);
+  oscillator.start(now);
+  oscillator.stop(now + 1.85);
+}
+
+function playNextNote() {
+  playNote(melody[noteIndex % melody.length]);
+  if (noteIndex % 4 === 0) playNote(melody[noteIndex % melody.length] / 2);
+  noteIndex += 1;
+}
+
+async function startMusic() {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext || !musicButton) return;
+
+  if (!audioContext) {
+    audioContext = new AudioContext();
+    masterGain = audioContext.createGain();
+    masterGain.gain.setValueAtTime(0.0001, audioContext.currentTime);
+    masterGain.connect(audioContext.destination);
+  }
+
+  await audioContext.resume();
+  masterGain.gain.cancelScheduledValues(audioContext.currentTime);
+  masterGain.gain.exponentialRampToValueAtTime(0.16, audioContext.currentTime + 1.2);
+  playNextNote();
+  musicTimer = window.setInterval(playNextNote, 1350);
+
+  musicButton.classList.add('is-playing');
+  musicButton.setAttribute('aria-pressed', 'true');
+  musicButton.setAttribute('aria-label', '暂停背景音乐');
+  musicButton.querySelector('.music-label').textContent = '暂停音乐';
+}
+
+function stopMusic() {
+  if (!audioContext || !masterGain || !musicButton) return;
+
+  window.clearInterval(musicTimer);
+  musicTimer = undefined;
+  masterGain.gain.cancelScheduledValues(audioContext.currentTime);
+  masterGain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.8);
+
+  musicButton.classList.remove('is-playing');
+  musicButton.setAttribute('aria-pressed', 'false');
+  musicButton.setAttribute('aria-label', '播放背景音乐');
+  musicButton.querySelector('.music-label').textContent = '播放音乐';
+}
+
+if (musicButton) {
+  musicButton.addEventListener('click', () => {
+    if (musicTimer) stopMusic();
+    else startMusic();
+  });
+}
