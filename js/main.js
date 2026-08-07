@@ -101,83 +101,51 @@ function createPetal() {
 if (!reduceMotion) setInterval(createPetal, 2600);
 
 const musicButton = document.getElementById('music-toggle');
-let audioContext;
-let masterGain;
-let musicTimer;
-let noteIndex = 0;
+const backgroundMusic = document.getElementById('background-music');
+let musicStarting = false;
 
-const melody = [
-  261.63, 329.63, 392.00, 493.88,
-  440.00, 392.00, 329.63, 293.66,
-  261.63, 329.63, 440.00, 392.00,
-  293.66, 329.63, 261.63, 196.00
-];
+function setMusicButton(playing) {
+  if (!musicButton) return;
 
-function playNote(frequency) {
-  if (!audioContext || !masterGain) return;
-
-  const now = audioContext.currentTime;
-  const oscillator = audioContext.createOscillator();
-  const noteGain = audioContext.createGain();
-
-  oscillator.type = 'sine';
-  oscillator.frequency.setValueAtTime(frequency, now);
-  noteGain.gain.setValueAtTime(0, now);
-  noteGain.gain.linearRampToValueAtTime(0.18, now + 0.08);
-  noteGain.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
-
-  oscillator.connect(noteGain);
-  noteGain.connect(masterGain);
-  oscillator.start(now);
-  oscillator.stop(now + 1.85);
-}
-
-function playNextNote() {
-  playNote(melody[noteIndex % melody.length]);
-  if (noteIndex % 4 === 0) playNote(melody[noteIndex % melody.length] / 2);
-  noteIndex += 1;
+  musicButton.classList.toggle('is-playing', playing);
+  musicButton.setAttribute('aria-pressed', String(playing));
+  musicButton.setAttribute('aria-label', playing ? '暂停背景音乐' : '播放背景音乐');
+  musicButton.querySelector('.music-label').textContent = playing ? '暂停音乐' : '播放音乐';
 }
 
 async function startMusic() {
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContext || !musicButton) return;
+  if (!backgroundMusic || !musicButton || musicStarting) return;
 
-  if (!audioContext) {
-    audioContext = new AudioContext();
-    masterGain = audioContext.createGain();
-    masterGain.gain.setValueAtTime(0.0001, audioContext.currentTime);
-    masterGain.connect(audioContext.destination);
+  musicStarting = true;
+  musicButton.querySelector('.music-label').textContent = '加载中';
+  backgroundMusic.volume = 0.48;
+
+  try {
+    await backgroundMusic.play();
+    setMusicButton(true);
+  } catch (error) {
+    setMusicButton(false);
+    musicButton.querySelector('.music-label').textContent = '点击重试';
+    console.warn('Background music could not start:', error);
+  } finally {
+    musicStarting = false;
   }
-
-  await audioContext.resume();
-  masterGain.gain.cancelScheduledValues(audioContext.currentTime);
-  masterGain.gain.exponentialRampToValueAtTime(0.16, audioContext.currentTime + 1.2);
-  playNextNote();
-  musicTimer = window.setInterval(playNextNote, 1350);
-
-  musicButton.classList.add('is-playing');
-  musicButton.setAttribute('aria-pressed', 'true');
-  musicButton.setAttribute('aria-label', '暂停背景音乐');
-  musicButton.querySelector('.music-label').textContent = '暂停音乐';
 }
 
 function stopMusic() {
-  if (!audioContext || !masterGain || !musicButton) return;
-
-  window.clearInterval(musicTimer);
-  musicTimer = undefined;
-  masterGain.gain.cancelScheduledValues(audioContext.currentTime);
-  masterGain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.8);
-
-  musicButton.classList.remove('is-playing');
-  musicButton.setAttribute('aria-pressed', 'false');
-  musicButton.setAttribute('aria-label', '播放背景音乐');
-  musicButton.querySelector('.music-label').textContent = '播放音乐';
+  if (!backgroundMusic) return;
+  backgroundMusic.pause();
+  setMusicButton(false);
 }
 
-if (musicButton) {
+if (musicButton && backgroundMusic) {
   musicButton.addEventListener('click', () => {
-    if (musicTimer) stopMusic();
+    if (!backgroundMusic.paused) stopMusic();
     else startMusic();
+  });
+
+  backgroundMusic.addEventListener('error', () => {
+    setMusicButton(false);
+    musicButton.querySelector('.music-label').textContent = '音乐不可用';
   });
 }
