@@ -254,6 +254,42 @@ footer p { letter-spacing: .08em; }
 .petals { position: fixed; inset: 0; z-index: 30; overflow: hidden; pointer-events: none; }
 .petal { position: absolute; top: -20px; width: 8px; height: 12px; border-radius: 70% 30% 70% 30%; background: #d8a7aa; opacity: 0; animation: petal-fall linear forwards; }
 
+.music-toggle {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px 8px 8px;
+  border: 1px solid rgba(255,255,255,.4);
+  border-radius: 999px;
+  background: rgba(36,56,45,.88);
+  box-shadow: 0 12px 36px rgba(25,38,30,.22);
+  color: white;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: transform .25s, background .25s;
+}
+.music-toggle:hover { transform: translateY(-2px); background: rgba(126,47,62,.94); }
+.music-toggle:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.music-disc {
+  position: relative;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255,255,255,.42);
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, transparent 0 3px, rgba(255,255,255,.13) 4px 5px);
+  place-items: center;
+}
+.music-disc::before { content: "♪"; font-family: Georgia, serif; font-size: 15px; }
+.music-disc i { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
+.music-label { font-size: 11px; letter-spacing: .12em; }
+.music-toggle.is-playing .music-disc { animation: disc-spin 5s linear infinite; }
+.music-toggle.is-playing { background: rgba(126,47,62,.94); }
+
 .reveal { opacity: 0; transform: translateY(32px); transition: opacity .9s ease, transform .9s ease; }
 .reveal.is-visible { opacity: 1; transform: none; }
 
@@ -277,6 +313,8 @@ footer p { letter-spacing: .08em; }
   10% { opacity: .65; }
   100% { opacity: 0; transform: translate3d(var(--drift),105vh,0) rotate(540deg); }
 }
+
+@keyframes disc-spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 900px) {
   .site-header { color: var(--ink); }
@@ -344,4 +382,10 @@ footer p { letter-spacing: .08em; }
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .petals { display: none; }
+  .music-toggle.is-playing .music-disc { animation: none; }
+}
+
+@media (max-width: 600px) {
+  .music-toggle { right: 16px; bottom: 16px; padding-right: 10px; }
+  .music-label { display: none; }
 }
