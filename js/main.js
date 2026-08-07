@@ -12,10 +12,27 @@ setInterval(update,1000);update();
 
 const items=document.querySelectorAll('.memory');
 const observer=new IntersectionObserver(entries=>{
- entries.forEach(e=>{if(e.isIntersecting)e.target.style.opacity=1;});
-});
+ entries.forEach(e=>{
+  if(e.isIntersecting)e.target.classList.add('show');
+ });
+},{threshold:.2});
 items.forEach(i=>observer.observe(i));
 
 document.getElementById('music').onclick=()=>{
  alert('这里可以放你们喜欢的背景音乐 🎵');
 };
+
+setInterval(()=>{
+ const heart=document.createElement('div');
+ heart.innerHTML='❤';
+ heart.style.position='fixed';
+ heart.style.left=Math.random()*100+'vw';
+ heart.style.bottom='-20px';
+ heart.style.color='#f3a6bd';
+ heart.style.fontSize=(10+Math.random()*20)+'px';
+ heart.style.transition='6s linear';
+ heart.style.pointerEvents='none';
+ document.body.appendChild(heart);
+ setTimeout(()=>{heart.style.transform='translateY(-110vh)';heart.style.opacity=0},100);
+ setTimeout(()=>heart.remove(),6000);
+},3000);
