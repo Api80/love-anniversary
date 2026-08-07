@@ -1,38 +1,101 @@
-const start = new Date('2026-05-01T00:00:00');
-function update(){
- const now=new Date();
- const diff=now-start;
- const days=Math.floor(diff/86400000);
- const hours=Math.floor(diff/3600000)%24;
- const mins=Math.floor(diff/60000)%60;
- const secs=Math.floor(diff/1000)%60;
- document.getElementById('counter').innerHTML=`已经相伴 ${days} 天 ${hours} 小时 ${mins} 分 ${secs} 秒 ❤️`;
+const engagementDate = new Date(2026, 8, 28, 0, 0, 0);
+const firstMetDate = new Date(2026, 4, 1, 0, 0, 0);
+
+function pad(value) {
+  return String(value).padStart(2, '0');
 }
-setInterval(update,1000);update();
 
-const items=document.querySelectorAll('.memory');
-const observer=new IntersectionObserver(entries=>{
- entries.forEach(e=>{
-  if(e.isIntersecting)e.target.classList.add('show');
- });
-},{threshold:.2});
-items.forEach(i=>observer.observe(i));
+function updateCountdown() {
+  const title = document.getElementById('counter-title');
+  const fields = {
+    days: document.getElementById('days'),
+    hours: document.getElementById('hours'),
+    minutes: document.getElementById('minutes'),
+    seconds: document.getElementById('seconds')
+  };
 
-document.getElementById('music').onclick=()=>{
- alert('这里可以放你们喜欢的背景音乐 🎵');
-};
+  if (!title || Object.values(fields).some(field => !field)) return;
 
-setInterval(()=>{
- const heart=document.createElement('div');
- heart.innerHTML='❤';
- heart.style.position='fixed';
- heart.style.left=Math.random()*100+'vw';
- heart.style.bottom='-20px';
- heart.style.color='#f3a6bd';
- heart.style.fontSize=(10+Math.random()*20)+'px';
- heart.style.transition='6s linear';
- heart.style.pointerEvents='none';
- document.body.appendChild(heart);
- setTimeout(()=>{heart.style.transform='translateY(-110vh)';heart.style.opacity=0},100);
- setTimeout(()=>heart.remove(),6000);
-},3000);
+  const now = new Date();
+  const isUpcoming = now < engagementDate;
+  const distance = Math.abs(engagementDate - now);
+  const days = Math.floor(distance / 86400000);
+  const hours = Math.floor(distance / 3600000) % 24;
+  const minutes = Math.floor(distance / 60000) % 60;
+  const seconds = Math.floor(distance / 1000) % 60;
+
+  title.textContent = isUpcoming ? '距离我们订婚还有' : '我们已经订婚';
+  fields.days.textContent = pad(days);
+  fields.hours.textContent = pad(hours);
+  fields.minutes.textContent = pad(minutes);
+  fields.seconds.textContent = pad(seconds);
+}
+
+function updateKnownTime() {
+  const title = document.getElementById('known-title');
+  const fields = {
+    days: document.getElementById('known-days'),
+    hours: document.getElementById('known-hours'),
+    minutes: document.getElementById('known-minutes'),
+    seconds: document.getElementById('known-seconds')
+  };
+
+  if (!title || Object.values(fields).some(field => !field)) return;
+
+  const now = new Date();
+  const hasMet = now >= firstMetDate;
+  const distance = Math.abs(now - firstMetDate);
+  const days = Math.floor(distance / 86400000);
+  const hours = Math.floor(distance / 3600000) % 24;
+  const minutes = Math.floor(distance / 60000) % 60;
+  const seconds = Math.floor(distance / 1000) % 60;
+
+  title.textContent = hasMet ? '我们已经认识' : '距离我们认识还有';
+  fields.days.textContent = pad(days);
+  fields.hours.textContent = pad(hours);
+  fields.minutes.textContent = pad(minutes);
+  fields.seconds.textContent = pad(seconds);
+}
+
+function updateTimers() {
+  updateCountdown();
+  updateKnownTime();
+}
+
+updateTimers();
+setInterval(updateTimers, 1000);
+
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const revealItems = document.querySelectorAll('.reveal');
+
+if (reduceMotion || !('IntersectionObserver' in window)) {
+  revealItems.forEach(item => item.classList.add('is-visible'));
+} else {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px' });
+
+  revealItems.forEach(item => observer.observe(item));
+}
+
+const petals = document.querySelector('.petals');
+
+function createPetal() {
+  if (!petals || reduceMotion || document.hidden) return;
+
+  const petal = document.createElement('span');
+  petal.className = 'petal';
+  petal.style.left = `${Math.random() * 100}%`;
+  petal.style.setProperty('--drift', `${Math.round(Math.random() * 160 - 80)}px`);
+  petal.style.animationDuration = `${7 + Math.random() * 5}s`;
+  petal.style.animationDelay = `${Math.random() * 0.8}s`;
+  petals.appendChild(petal);
+  petal.addEventListener('animationend', () => petal.remove(), { once: true });
+}
+
+if (!reduceMotion) setInterval(createPetal, 2600);
