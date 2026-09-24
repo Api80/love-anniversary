@@ -132,11 +132,17 @@ nav a:hover { opacity: 1; }
 
 .countdown-title { margin: 0 0 14px; color: rgba(255,255,255,.56); font-size: 12px; letter-spacing: .14em; }
 .countdown-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+.countdown-grid[hidden] { display: none; }
 .countdown-grid div { display: flex; align-items: baseline; gap: 6px; border-right: 1px solid rgba(255,255,255,.14); text-align: center; }
 .countdown-grid div:not(:first-child) { justify-content: center; }
 .countdown-grid div:last-child { border: 0; }
 .countdown strong { font-family: Georgia, serif; font-size: clamp(25px, 3vw, 42px); font-weight: 400; font-variant-numeric: tabular-nums; }
 .countdown span { color: rgba(255,255,255,.48); font-size: 11px; }
+.milestone-message { position: relative; min-height: 104px; align-items: center; justify-content: center; flex-direction: column; gap: 7px; text-align: center; }
+.milestone-message:not([hidden]) { display: flex; }
+.milestone-ring { position: absolute; left: 18px; color: var(--gold); font-family: Georgia, serif; font-size: 48px; opacity: .72; animation: ring-glow 2.4s ease-in-out infinite; }
+.milestone-message strong { color: #f2dfaa; font-family: Georgia, "Songti SC", serif; font-size: clamp(30px, 4vw, 50px); font-weight: 400; letter-spacing: .08em; }
+.milestone-message small { color: rgba(255,255,255,.66); font-family: "Songti SC", "SimSun", serif; font-size: 13px; letter-spacing: .12em; }
 
 .text-link {
   display: inline-flex;
@@ -188,6 +194,67 @@ nav a:hover { opacity: 1; }
 .date-card strong { align-self: center; font-family: Georgia, serif; font-size: 70px; font-weight: 400; line-height: .8; }
 .date-card small { font-size: 10px; opacity: .7; }
 .hand-note { position: absolute; left: 28px; bottom: 28px; margin: 0; color: rgba(255,255,255,.78); font-family: "Segoe Script", cursive; font-size: 14px; transform: rotate(-4deg); }
+
+body.engagement-day .hero {
+  background:
+    radial-gradient(circle at 22% 35%, rgba(185,151,91,.22), transparent 28rem),
+    linear-gradient(145deg, #26382e, #17281f);
+}
+body.engagement-day .hero-visual::after,
+body.engagement-anniversary .hero-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 46%, rgba(255,239,190,.2), transparent 35%);
+}
+body.engagement-day .hero-photo { box-shadow: 0 30px 100px rgba(245,213,138,.28); }
+body.engagement-day .date-card,
+body.engagement-anniversary .date-card { background: linear-gradient(145deg, #b5965b, #8a6a34); }
+body.engagement-day .date-card { animation: date-celebrate 3s ease-in-out infinite; }
+body.engagement-day .hero h1 em,
+body.engagement-anniversary .hero h1 em { color: #efd99f; }
+body.engagement-day .countdown { border-color: rgba(239,217,159,.38); }
+body.engagement-day .text-link { border-color: rgba(239,217,159,.55); }
+body.engagement-day .date-banner,
+body.engagement-anniversary .date-banner {
+  background:
+    linear-gradient(135deg, rgba(55,43,21,.72), rgba(24,47,34,.78)),
+    url("../assets/images/05-memory.webp") center/cover fixed;
+}
+body.engagement-day .date-banner-inner,
+body.engagement-anniversary .date-banner-inner {
+  padding: clamp(32px, 6vw, 64px);
+  border: 1px solid rgba(242,223,170,.34);
+  background: rgba(31,44,34,.18);
+  box-shadow: 0 30px 90px rgba(0,0,0,.2);
+  backdrop-filter: blur(4px);
+}
+body.engagement-day .date-card::after,
+body.engagement-past .date-card::after,
+body.engagement-anniversary .date-card::after {
+  content: "已订婚";
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--paper-light);
+  color: var(--berry);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+body.engagement-day .date-card::after {
+  content: "就是今天";
+}
+
+body.engagement-anniversary .date-card::after {
+  content: "纪念日";
+}
 
 .section-wrap { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
 .promise { position: relative; display: grid; grid-template-columns: 1.25fr .75fr; gap: clamp(50px, 9vw, 140px); padding-top: 150px; padding-bottom: 150px; }
@@ -250,9 +317,11 @@ nav a:hover { opacity: 1; }
 
 footer { display: flex; align-items: center; justify-content: space-between; padding: 30px clamp(24px,5vw,76px); border-top: 1px solid var(--line); color: var(--ink-soft); font-size: 11px; letter-spacing: .18em; }
 footer p { letter-spacing: .08em; }
+footer a { color: inherit; text-decoration-color: rgba(74,78,69,.28); text-underline-offset: 3px; }
 
 .petals { position: fixed; inset: 0; z-index: 30; overflow: hidden; pointer-events: none; }
 .petal { position: absolute; top: -20px; width: 8px; height: 12px; border-radius: 70% 30% 70% 30%; background: #d8a7aa; opacity: 0; animation: petal-fall linear forwards; }
+.petal.celebration-petal { width: 7px; height: 14px; background: linear-gradient(145deg, #f5dfa5, #b9975b); box-shadow: 0 0 8px rgba(245,223,165,.38); }
 
 .music-toggle {
   position: fixed;
@@ -315,6 +384,8 @@ footer p { letter-spacing: .08em; }
 }
 
 @keyframes disc-spin { to { transform: rotate(360deg); } }
+@keyframes ring-glow { 50% { opacity: 1; transform: scale(1.12) rotate(45deg); } }
+@keyframes date-celebrate { 50% { transform: translateY(-5px); box-shadow: 0 24px 65px rgba(245,213,138,.32); } }
 
 @media (max-width: 900px) {
   .site-header { color: var(--ink); }
@@ -329,6 +400,10 @@ footer p { letter-spacing: .08em; }
   .countdown { border-color: var(--line); }
   .countdown-title, .countdown span { color: var(--ink-soft); }
   .countdown-grid div { border-color: var(--line); }
+  .milestone-message small { color: var(--ink-soft); }
+  .milestone-ring { left: 6px; }
+  body.engagement-day .hero { background: var(--paper); }
+  body.engagement-day .countdown { border-color: rgba(185,151,91,.42); }
   .text-link { border-color: var(--line); }
   .promise { grid-template-columns: 1fr; gap: 50px; padding-top: 130px; padding-bottom: 110px; }
   .album-heading { align-items: start; flex-direction: column; gap: 30px; }
@@ -369,6 +444,8 @@ footer p { letter-spacing: .08em; }
   .photo-three { order: 4; }
   .photo-four { order: 5; }
   .date-banner { min-height: 62vh; background-attachment: scroll; }
+  body.engagement-day .date-banner,
+  body.engagement-anniversary .date-banner { background-attachment: scroll; }
   .big-date { gap: 16px; }
   .big-date strong { font-size: 72px; }
   footer { align-items: flex-start; flex-direction: column; gap: 12px; }

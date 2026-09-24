@@ -1,7 +1,9 @@
 # Background music
 
-`piano-emotional-solo.ogg` is **Piano Emotional Solo 139** by Tozan.
+`salut-damour.ogg` is **Salut d'Amour, Op. 12** by Edward Elgar,
+performed by Emanuel Salvador (violin) and Pau Casan (piano).
 
-- Source: https://opengameart.org/content/piano-emotional-solo-139
-- License: CC0 1.0 Universal (public domain)
-- Attribution: Optional
+- Source: https://imslp.org/wiki/Salut_d%27amour_(Elgar,_Edward)
+- Recording download: https://www.orangefreesounds.com/salut-d-amour/
+- License: Creative Commons Attribution 3.0 Unported (CC BY 3.0)
+- Changes: Converted from MP3 to Ogg Vorbis for web playback.

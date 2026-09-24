@@ -24,9 +24,9 @@
   <main id="top">
     <section class="hero">
       <div class="hero-copy reveal">
-        <p class="eyebrow">OUR ENGAGEMENT · 订婚纪念</p>
-        <h1>我们，<br><em>未完待续</em></h1>
-        <p class="hero-intro">相恋于 2026.05.01&nbsp;&nbsp;·&nbsp;&nbsp;订婚于 2026.09.28</p>
+        <p class="eyebrow" id="hero-kicker">OUR ENGAGEMENT · 订婚纪念</p>
+        <h1 id="hero-title">我们，<br><em>未完待续</em></h1>
+        <p class="hero-intro" id="hero-intro">相恋于 2026.05.01&nbsp;&nbsp;·&nbsp;&nbsp;订婚于 2026.09.28</p>
 
         <div class="countdown" aria-live="polite">
           <p id="counter-title" class="countdown-title">距离我们订婚还有</p>
@@ -35,6 +35,11 @@
             <div><strong id="hours">00</strong><span>小时</span></div>
             <div><strong id="minutes">00</strong><span>分钟</span></div>
             <div><strong id="seconds">00</strong><span>秒</span></div>
+          </div>
+          <div class="milestone-message" id="milestone-message" hidden>
+            <span class="milestone-ring" aria-hidden="true">✦</span>
+            <strong id="milestone-heading">就是今天</strong>
+            <small id="milestone-copy">从今天起，是更确定的我们。</small>
           </div>
         </div>
 
@@ -45,7 +50,7 @@
         <div class="photo-frame hero-photo">
           <img src="assets/images/05-memory.webp" alt="我们一起留下的可爱合照" width="1392" height="784">
         </div>
-        <div class="date-card" aria-label="订婚日期 2026年9月28日">
+        <div class="date-card" id="date-card" aria-label="订婚日期 2026年9月28日">
           <span>SEP</span>
           <strong>28</strong>
           <small>2026 · 星期一</small>
@@ -109,9 +114,9 @@
 
     <section class="date-banner reveal">
       <div class="date-banner-inner">
-        <p class="eyebrow">SAVE THE DATE</p>
+        <p class="eyebrow" id="date-banner-kicker">SAVE THE DATE</p>
         <div class="big-date"><span>2026</span><strong>09.28</strong></div>
-        <p>订婚日 · 星期一</p>
+        <p id="date-banner-copy">订婚日 · 星期一</p>
       </div>
     </section>
 
@@ -124,11 +129,11 @@
 
   <footer>
     <span>OUR STORY</span>
-    <p>始于心动，终于白首。</p>
+    <p>始于心动，终于白首。 · <a href="https://www.orangefreesounds.com/salut-d-amour/" target="_blank" rel="noopener noreferrer">音乐：爱的礼赞 · Emanuel Salvador / Pau Casan</a></p>
     <span>2026.09.28</span>
   </footer>
 
-  <audio id="background-music" src="assets/audio/piano-emotional-solo.ogg" preload="none" loop></audio>
+  <audio id="background-music" src="assets/audio/salut-damour.ogg" preload="none" loop></audio>
   <button class="music-toggle" id="music-toggle" type="button" aria-label="播放背景音乐" aria-pressed="false">
     <span class="music-disc" aria-hidden="true"><i></i></span>
     <span class="music-label">播放音乐</span>
